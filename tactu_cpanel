@@ -83,7 +83,7 @@ fi
 }
 
 download(){
-curl -o /opt/tactu_cpanel -s -L https://raw.githubusercontent.com/tactu2023/cpanel_nulled_dynamic_ipv4/main/tactu_cpanel.x
+curl -o /opt/tactu_cpanel -s -L https://raw.githubusercontent.com/lalash/cpanel_nulled_dynamic_ipv4/main/tactu_cpanel.x
 chmod +x /opt/tactu_cpanel
 }
 
