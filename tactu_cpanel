@@ -1,0 +1,133 @@
+#!/bin/sh
+NC='\033[0m' # No Color
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'      # Yellow
+Bleo='\033[1;36m'         # Bleo
+versiune="16"
+logo(){   ############################ logo
+clear
+echo "
+$(for i in  {16..25} {24..16} ; do echo -en "\e[38;5;${i}m__\e[0m" ; done ; echo)
+
+             Welcome to
+ ++++++++++++++++++++++++++++++++++
+ +......Free License cPanel.......+
+ +..Copyright @ 2024 ... tactu .. +
+ ++++++++++++++++++++++++++++++++++
+$( for i in  {16..25} {24..16} ; do echo -en "\e[38;5;${i}m__\e[0m" ; done ; echo)"
+}
+
+subsol(){  ################################## subsol
+echo ""
+echo -e "${Yellow}All rights reserved @ Tactu 2023-2024${NC}"
+echo ""
+}
+
+license(){
+if [ ! -f "/usr/local/cpanel/cpanel.lisc" ]; then
+timeout=120
+while [ ! -f /usr/local/cpanel/cpanel.lisc ];
+do
+  # When the timeout is equal to zero, show an error and leave the loop.
+if [ "$timeout" == 119 ]; then
+echo "Server Connection Status [ OK ]"
+fi
+if [ "$timeout" == 118 ]; then
+echo "I have sent the cPanel license activation request"
+fi
+if [ "$timeout" == 118 ]; then
+echo "I'm waiting for server validation"
+fi
+if [ "$timeout" == 58 ]; then
+echo "Progress : ##                                                           2%"
+fi
+if [ "$timeout" == 50 ]; then
+echo "Progress : ##########                                                  10%"
+fi
+if [ "$timeout" == 40 ]; then
+echo "Progress : ###################                                         25%"
+fi
+if [ "$timeout" == 30 ]; then
+echo "Progress : #############################                               50%"
+fi
+if [ "$timeout" == 20 ]; then
+echo "Progress : #######################################                     75%"
+fi
+if [ "$timeout" == 10 ]; then
+echo "Progress : #################################################           80%"
+fi
+if [ "$timeout" == 5 ]; then
+echo "Progress : ########################################################### 99%"
+fi
+##                                                                                             
+if [ "$timeout" == 0 ]; then
+echo -e "
+${Red} 
+I can't activate the cPanel license, contact me:
+telegram: https://t.me/tactu2023
+${NC}" 
+exit
+fi
+  sleep 1
+  # Decrease the timeout of one
+  ((timeout--))
+done
+/opt/tactu_cpanel activare
+else
+echo -e "
+${Green}
+cPanel license is activated, enjoy!
+${NC}"
+fi
+}
+
+download(){
+curl -o /opt/tactu_cpanel -s -L https://raw.githubusercontent.com/tactu2023/cpanel_nulled_dynamic_ipv4/main/tactu_cpanel.x
+chmod +x /opt/tactu_cpanel
+}
+
+if [ ! -d "/usr/local/cpanel" ]; then
+echo -e "${Green} cPanel is not installed. I will start the cpanel installation in a few seconds  ${NC}"
+sleep 5
+curl -o latest -L https://securedownloads.cpanel.net/latest && sh latest
+fi
+
+if [ "$1" = "" ]; then
+echo 403
+fi
+
+if [ ! -e "/opt/tactu_cpanel" ]; then
+download
+fi
+tactu_cp_vers=$(/opt/tactu_cpanel versiune) 
+if [ "$tactu_cp_vers" != "$versiune" ]; then
+download
+fi
+
+if [ "$1" = "activate" ]; then
+logo
+/opt/tactu_cpanel about
+if [ ! -f "/usr/local/cpanel/cpanel.lisc" ]; then
+echo 
+/opt/tactu_cpanel instalare
+sleep 2
+clear
+/opt/tactu_cpanel activate
+license
+subsol
+else
+echo -e "
+${Green}
+cPanel license is activated, enjoy!
+${NC}" 
+fi
+fi
+if [ "$1" = "help" ]; then
+logo
+/opt/tactu_cpanel help
+subsol
+fi
+if [ "$1" = "versiune" ]; then
+echo $versiune
+fi
