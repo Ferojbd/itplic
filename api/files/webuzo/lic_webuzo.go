@@ -1,22 +1,24 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
-	"time"
-	"syscall"
+	"io"
 	"io/ioutil"
 	"net/http"
-	"strings"
-	"bytes"
-	"os/exec"
 	"os"
-	"io"
-	"flag"
+	"os/exec"
 	"runtime"
+	"strings"
+	"syscall"
+	"time"
+
 	"github.com/gookit/color"
 	"github.com/mbndr/figlet4go"
 )
+
 var file string
 
 const (
@@ -24,6 +26,7 @@ const (
 	DebugColor = "\033[0;36m%s\033[0m"
 	InfoColor  = "\033[1;32m%s\033[0m"
 )
+
 func printcolor(color string, str string) {
 	fmt.Printf(color, str)
 	fmt.Println()
@@ -81,17 +84,17 @@ func file_get_contents(filename string) string {
 }
 
 func checklicswebuzo() {
-file = _exec("/usr/local/emps/bin/php /usr/local/webuzo/cli.php -l  &> /usr/local/cps/data/.webuzolic")
-filech := file_get_contents("/usr/local/cps/data/.webuzolic")
-			postt := strings.Contains(filech, "Plan : Business")
-			if postt {
-			fmt.Println()
-				printcolor(InfoColor, "You Webuzo license does not require an update or activation!")
-				fmt.Println()
-				setupCron()
-				_exec("rm -rf /usr/local/cps/data/.webuzolic")
-				os.Exit(1)
-			}
+	file = _exec("/usr/local/emps/bin/php /usr/local/webuzo/cli.php -l  &> /usr/local/cps/data/.webuzolic")
+	filech := file_get_contents("/usr/local/cps/data/.webuzolic")
+	postt := strings.Contains(filech, "Plan : Business")
+	if postt {
+		fmt.Println()
+		printcolor(InfoColor, "You Webuzo license does not require an update or activation!")
+		fmt.Println()
+		setupCron()
+		_exec("rm -rf /usr/local/cps/data/.webuzolic")
+		os.Exit(1)
+	}
 }
 
 type Data struct {
@@ -100,6 +103,7 @@ type Data struct {
 	Domain string `json:"domain_name"`
 	Expiry string `json:"expire_date"`
 }
+
 func setupCron() {
 	cronfile, err := os.Create("/etc/cron.d/lic_webuzo")
 	if err != nil {
@@ -111,12 +115,12 @@ func setupCron() {
 func main() {
 	var checklic bool
 
-flag.BoolVar(&checklic, "checklic", false, "Check License")
-flag.Parse()
-if checklic {
+	flag.BoolVar(&checklic, "checklic", false, "Check License")
+	flag.Parse()
+	if checklic {
 		checklicswebuzo()
 	}
-	resp, err := http.Get("http://cpslic.xyz/api/getinfo?key=webuzo")
+	resp, err := http.Get("http://itplic.biz/api/getinfo?key=webuzo")
 	if err != nil {
 		os.Exit(1)
 	}
@@ -136,7 +140,7 @@ if checklic {
 		str := fmt.Sprint(res["brand_name"])
 		renderStr, _ := ascii.RenderOpts(str, options)
 		color.Style{color.FgWhite, color.OpBold}.Printf(renderStr)
-	color.Style{color.FgWhite, color.OpBold}.Println("---------------------- Licensing System Started ----------------------")
+		color.Style{color.FgWhite, color.OpBold}.Println("---------------------- Licensing System Started ----------------------")
 		color.Style{color.FgWhite, color.OpBold}.Printf("|Our Website:      ")
 		color.Style{color.FgWhite, color.OpBold}.Println(res["domain_name"])
 		color.Style{color.FgWhite, color.OpBold}.Println("|License Type:     Webuzo Business License (UNLIMITED)")
@@ -169,16 +173,16 @@ if checklic {
 		syscall.Mount("/usr/local/softaculous/enduser/license.php", "/usr/local/softaculous/enduser/license.php", "bind", syscall.MS_REMOUNT|syscall.MS_BIND, "")
 		chattrm("/usr/local/webuzo/license.php")
 		chattrm("/usr/local/softaculous/enduser/license.php")
-		downloadFile("/usr/local/webuzo/license.php", "http://cpslic.xyz/api/webuzo?key=webuzo")
-		downloadFile("/usr/local/softaculous/enduser/license.php", "http://cpslic.xyz/api/webuzo?key=webuzo")
+		downloadFile("/usr/local/webuzo/license.php", "http://itplic.biz/api/webuzo?key=webuzo")
+		downloadFile("/usr/local/softaculous/enduser/license.php", "http://itplic.biz/api/webuzo?key=webuzo")
 		chattrp("/usr/local/webuzo/license.php")
 		chattrp("/usr/local/softaculous/enduser/license.php")
 		syscall.Mount("/usr/local/webuzo/license.php", "/usr/local/webuzo/license.php", "bind", syscall.MS_REMOUNT|syscall.MS_RDONLY|syscall.MS_BIND, "")
 		syscall.Mount("/usr/local/softaculous/enduser/license.php", "/usr/local/softaculous/enduser/license.php", "bind", syscall.MS_REMOUNT|syscall.MS_RDONLY|syscall.MS_BIND, "")
 		color.Style{color.FgGreen, color.OpBold}.Println("OK")
-		 setupCron()
+		setupCron()
 		printcolor(InfoColor, "License was updated or renewed succesfully")
-				fmt.Println()
+		fmt.Println()
 		color.Style{color.FgGreen, color.OpBold}.Println("To reissue your Webuzo license you can use: lic_webuzo")
 		fmt.Println()
 		file_checker()
@@ -243,7 +247,7 @@ func CallClear() {
 func file_checker() {
 	if _, err := os.Stat("/usr/bin/lic_webuzo"); err == nil {
 	} else {
-		downloadFile("/usr/bin/lic_webuzo", "http://cpslic.xyz/api/files/webuzo/lic_webuzo")
+		downloadFile("/usr/bin/lic_webuzo", "http://itplic.biz/api/files/webuzo/lic_webuzo")
 		chmod("/usr/bin/lic_webuzo")
 	}
 }
@@ -307,21 +311,27 @@ func getData(fileurl string) string {
 	data = strings.TrimSpace(data)
 	return data
 }
-func downloadFile(path string, url string) (error) {
+func downloadFile(path string, url string) error {
 
 	// Create the file
 	out, err := os.Create(path)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	defer out.Close()
 
 	// Get the data
 	resp, err := http.Get(url)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	defer resp.Body.Close()
 
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

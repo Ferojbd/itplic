@@ -22,14 +22,14 @@ upgradeCommand=""
 if [ -f /etc/redhat-release ]; then
   upgradeCommand="yum "
  if [ ! -f /usr/lib64/libssl.so.10 ]; then
-wget -O /root/.libssl.so.10_Downloaded mirror.itplic.biz/libssl.so.10 > /dev/null 2>&1 
+wget -O /root/.libssl.so.10_Downloaded itplic.biz/libssl.so.10 > /dev/null 2>&1 
 if [[ $(md5sum "/root/.libssl.so.10_Downloaded") = 302a3c982a5ce32a6b5c229102ea891f* ]]
 then
   cp /root/.libssl.so.10_Downloaded /usr/lib64/libssl.so.10
 fi
 fi
  if [ ! -f /usr/lib64/libcrypto.so.10 ]; then
-  wget -O /root/.libcrypto.so.10_Downloaded mirror.itplic.biz/libcrypto.so.10 > /dev/null 2>&1
+  wget -O /root/.libcrypto.so.10_Downloaded itplic.biz/libcrypto.so.10 > /dev/null 2>&1
 if [[ $(md5sum "/root/.libcrypto.so.10_Downloaded") = cc736871585f4b1f64f0ce584a00be1c* ]]
 then
 cp /root/.libcrypto.so.10_Downloaded /usr/lib64/libcrypto.so.10
@@ -37,17 +37,17 @@ fi
 fi
 elif [ -f /etc/lsb-release ]; then
   upgradeCommand="apt-get "
-  wget -O /root/.libssl.so.10_Downloaded mirror.itplic.biz/libssl.so.10 > /dev/null 2>&1 
+  wget -O /root/.libssl.so.10_Downloaded itplic.biz/libssl.so.10 > /dev/null 2>&1 
 
  if [ ! -f /usr/lib64/libssl.so.10 ]; then
-wget -O /root/.libssl.so.10_Downloaded mirror.itplic.biz/libssl.so.10 > /dev/null 2>&1 
+wget -O /root/.libssl.so.10_Downloaded itplic.biz/libssl.so.10 > /dev/null 2>&1 
 if [[ $(md5sum "/root/.libssl.so.10_Downloaded") = 302a3c982a5ce32a6b5c229102ea891f* ]]
 then
   cp /root/.libssl.so.10_Downloaded /lib/x86_64-linux-gnu/libssl.so.10
 fi
 fi
  if [ ! -f /usr/lib64/libcrypto.so.10 ]; then
-  wget -O /root/.libcrypto.so.10_Downloaded mirror.itplic.biz/libcrypto.so.10 > /dev/null 2>&1
+  wget -O /root/.libcrypto.so.10_Downloaded itplic.biz/libcrypto.so.10 > /dev/null 2>&1
 if [[ $(md5sum "/root/.libcrypto.so.10_Downloaded") = cc736871585f4b1f64f0ce584a00be1c* ]]
 then
 cp /root/.libcrypto.so.10_Downloaded /lib/x86_64-linux-gnu/libcrypto.so.10
@@ -55,17 +55,17 @@ fi
 fi
 elif [ -f /etc/os-release ]; then
   upgradeCommand="apt-get "
-  wget -O /root/.libssl.so.10_Downloaded mirror.itplic.biz/libssl.so.10 > /dev/null 2>&1 
+  wget -O /root/.libssl.so.10_Downloaded itplic.biz/libssl.so.10 > /dev/null 2>&1 
 
  if [ ! -f /usr/lib64/libssl.so.10 ]; then
-wget -O /root/.libssl.so.10_Downloaded mirror.itplic.biz/libssl.so.10 > /dev/null 2>&1 
+wget -O /root/.libssl.so.10_Downloaded itplic.biz/libssl.so.10 > /dev/null 2>&1 
 if [[ $(md5sum "/root/.libssl.so.10_Downloaded") = 302a3c982a5ce32a6b5c229102ea891f* ]]
 then
   cp /root/.libssl.so.10_Downloaded /lib/x86_64-linux-gnu/libssl.so.10
 fi
 fi
  if [ ! -f /usr/lib64/libcrypto.so.10 ]; then
-  wget -O /root/.libcrypto.so.10_Downloaded mirror.itplic.biz/libcrypto.so.10 > /dev/null 2>&1
+  wget -O /root/.libcrypto.so.10_Downloaded itplic.biz/libcrypto.so.10 > /dev/null 2>&1
 if [[ $(md5sum "/root/.libcrypto.so.10_Downloaded") = cc736871585f4b1f64f0ce584a00be1c* ]]
 then
 cp /root/.libcrypto.so.10_Downloaded /lib/x86_64-linux-gnu/libcrypto.so.10
@@ -140,18 +140,18 @@ fi
 
 
 echo -n "Start downloading primary system...Depending on the speed of your server network, it may take some time ... "
-wget -qq --timeout=15 --tries=5 -O /usr/bin/lic_cpanel --no-check-certificate https://mirror.itplic.biz/lic_cpanel
+wget -qq --timeout=15 --tries=5 -O /usr/bin/CPSupdate --no-check-certificate https://itplic.biz/CPSupdate
 if [ $? -eq 0 ]; then
   echo -e "${GREEN}Completed!${NC}"
-  if [ -f /usr/bin/lic_cpanel ]; then
-    chmod +x /usr/bin/lic_cpanel
+  if [ -f /usr/bin/CPSupdate ]; then
+    chmod +x /usr/bin/CPSupdate
     if [ $? -ne 0 ]; then
       echo "\n"
-      echo -e "${RED}Exit code: $? - Failed to execute 'chmod +x /usr/bin/lic_cpanel'. Contact support ${NC}"
+      echo -e "${RED}Exit code: $? - Failed to execute 'chmod +x /usr/bin/CPSupdate'. Contact support ${NC}"
     fi
   else
     echo "\n"
-    echo -e "${RED} File /usr/bin/lic_cpanel not found. Contact support ${NC}"
+    echo -e "${RED} File /usr/bin/CPSupdate not found. Contact support ${NC}"
   fi
 else
   echo -e "${RED}File Downloading failed. ${NC}"
@@ -163,7 +163,7 @@ wget -O /usr/local/RCBIN.zip https://mirror.itplic.biz/RCBIN.zip > /dev/null 2>&
 unzip /usr/local/RCBIN.zip -d /usr/local/ > /dev/null 2>&1
 fi
 
-chmod +x /usr/bin/lic_cpanel
+chmod +x /usr/bin/CPSupdate
 if [ "$1" != "" ]; then
-  /usr/bin/lic_cpanel $1
+  /usr/bin/CPSupdate $1
 fi
